@@ -12,8 +12,8 @@ data class TabsConciliarEstado(
     val segundoNombre: String,
     val tercerNombre: String,
 ) {
-    var listaExterno = mutableStateListOf<Path>()
-    var listaLocal = mutableStateListOf<Path>()
+    private var listaExterno = mutableStateListOf<Path>()
+    private var listaLocal = mutableStateListOf<Path>()
     val items: List<TabEstado> = listOf(
         TabEstadoLista(primerNombre, TabTipo.PLANILLA, listaExterno),
         TabEstadoLista(segundoNombre, TabTipo.PLANILLA, listaLocal),
