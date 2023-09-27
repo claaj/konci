@@ -33,7 +33,10 @@ compose.desktop {
         mainClass = "ui.MainKt"
 
         nativeDistributions {
-            modules("jdk.unsupported")
+            includeAllModules = true
+            //modules("jdk.unsupported")
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
+
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             targetFormats(TargetFormat.Rpm)
             packageName = "Konci"
@@ -53,7 +56,7 @@ compose.desktop {
 
             windows {
                 console = false
-                iconFile.set(project.file("resouces/icon.ico"))
+                iconFile.set(project.file("resources/icon.ico"))
             }
         }
     }
