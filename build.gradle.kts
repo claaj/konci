@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.claaj"
-version = "1.0-SNAPSHOT"
+version = "0.0.1-BETA"
 
 repositories {
     mavenCentral()
@@ -37,15 +37,15 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             targetFormats(TargetFormat.Rpm)
             packageName = "Konci"
-            packageVersion = "1.0.0"
+            packageVersion = "0.0.1"
             description = "Ayudante para conciliar percepciones y retenciones."
             copyright = "© 2023 Cajal Matías. All rights reserved."
-            // licenseFile.set(project.file("LICENSE.txt"))
+            licenseFile.set(project.file("LICENSE"))
 
             linux {
                 rpmLicenseType = "MIT"
-                rpmPackageVersion = "1.0.0"
-                debPackageVersion = "1.0.0"
+                rpmPackageVersion = "0.0.1"
+                debPackageVersion = "0.0.1"
                 appRelease = "1"
                 appCategory = "Work"
                 iconFile.set(project.file("resources/icon.png"))
