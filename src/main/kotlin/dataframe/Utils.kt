@@ -5,20 +5,30 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 
-fun stringToLocalDate(cadena: String): LocalDate {
-    val split = cadena.split("/")
-    return LocalDate(split[2].toInt(), split[1].toInt(), split[0].toInt())
+fun stringToLocalDate(cadena: String?): LocalDate {
+    var fecha = LocalDate(2000, 1, 1)
+    if (cadena != null) {
+        val split = cadena.dropLast(6).split("-")
+        if (split.size == 3) fecha = LocalDate(split[0].toInt(), split[1].toInt(), split[2].toInt())
+    }
+    return fecha
 }
 
 fun fechaMayorTabla(df: DataFrame<*>): LocalDate {
-    val fechas = df.getColumn { "Fecha Comprobante"<LocalDate>() }.toList()
+    val fechas = df.getColumn { "FECHA"<String>() }.toList()
     var fechaMayor = LocalDate(2000, 1, 1)
     for (fecha in fechas) {
-        if (fechaMayor < fecha) {
-            fechaMayor = fecha
+        val fechaCast = fechaMayorConversion(fecha)
+        if (fechaMayor < fechaCast) {
+            fechaMayor = fechaCast
         }
     }
     return fechaMayor
+}
+
+private fun fechaMayorConversion(cadena: String): LocalDate {
+    val split = cadena.split("/")
+    return LocalDate(split[2].toInt(), split[1].toInt(), split[0].toInt())
 }
 
 fun cuitsUnicos(dfExterno: DataFrame<*>, dfLocal: DataFrame<*>): List<String> {
@@ -45,7 +55,7 @@ fun listaCuits(df: DataFrame<*>): List<String> {
 }
 
 fun importesPorCuit(df: DataFrame<*>, cuit: String): List<Double> {
-    return df.filter { "CUIT"<String>() == cuit }.getColumn { "Importe"<Double>() }.toList()
+    return df.filter { "CUIT"<String>() == cuit }.getColumn { "IMPORTE"<Double>() }.toList()
 }
 
 fun importesPorCuitUnicos(df: DataFrame<*>, cuit: String): ArrayList<Double> {
@@ -90,5 +100,5 @@ fun sumarImportes(listaImportes: List<Double>): Double {
 }
 
 fun filtroCuitImporte(df: DataFrame<*>, cuit: String, importe: Double): DataFrame<*> {
-    return df.filter { "CUIT"<String>() == cuit && "Importe"<Double>() == importe }
+    return df.filter { "CUIT"<String>() == cuit && "IMPORTE"<Double>() == importe }
 }
