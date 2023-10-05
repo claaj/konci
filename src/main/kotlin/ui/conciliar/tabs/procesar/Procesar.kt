@@ -55,7 +55,6 @@ private fun checkEstadosParaConciliar(
 
     for (rutaExterna in listaExterna) {
         if (!rutaExterna.exists()) throw FileNotFoundException()
-        println(rutaExterna.exists())
     }
 
     for (rutalocal in listaLocal) {
