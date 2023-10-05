@@ -1,13 +1,12 @@
 package dataframe
 
-import kotlinx.datetime.LocalDate
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.*
 import java.nio.file.Path
 import kotlin.math.absoluteValue
 
-val COLUMNAS = listOf("CUIT", "Razón Social", "Número Comprobante", "Fecha Comprobante", "Importe")
+val COLUMNAS = listOf("CUIT", "RAZON_SOC", "N_COMP", "FECHA", "IMPORTE")
 
 fun conciliar(
     archivosExternos: List<Path>,
@@ -50,46 +49,53 @@ private fun setupTablaAfip(ruta: Path): DataFrame<*> {
     }
 
     df = df.rename("CUIT Agente Ret./Perc.").into("CUIT")
-    df = df.rename("Denominación o Razón Social").into("Razón Social")
-    df = df.rename("Importe Ret./Perc.").into("Importe")
-    df = df.add("Origen") { "AFIP" }
+    df = df.rename("Denominación o Razón Social").into("RAZON_SOC")
+    df = df.rename("Importe Ret./Perc.").into("IMPORTE")
+    df = df.rename("Número Comprobante").into("N_COMP")
+    df = df.rename("Fecha Comprobante").into("FECHA")
+    df = df.add("ORIGEN") { "AFIP" }
     df = df.convert("CUIT").with { it.toString() }
-    df = df.convert { "Fecha Comprobante"<String>() }.with { stringToLocalDate(it) }
+
+    df = df.convert("FECHA").with { it.toString() }
+
     return df
 }
 
 private fun setupTablaTango(ruta: Path): DataFrame<*> {
     var df = DataFrame.readExcel(ruta.toString())
+
     df = df.select {
         col("CUIT") and col("RAZON_SOC") and col("N_COMP") and col("FECH_COMP") and col("IMPORTE")
     }
 
-    df = df.rename("RAZON_SOC").into("Razón Social")
-    df = df.rename("N_COMP").into("Número Comprobante")
-    df = df.rename("FECH_COMP").into("Fecha Comprobante")
-    df = df.rename("IMPORTE").into("Importe")
-    df = df.add("Origen") { "Tango" }
-    df = df.convert("Fecha Comprobante").to<LocalDate>()
+    df = df.rename("FECH_COMP").into("FECHA")
+    df = df.add("ORIGEN") { "TANGO" }
+    df = df.convert("FECHA").with {
+        val fecha = stringToLocalDate(it.toString())
+        String.format("%02d/%02d/%02d", fecha.dayOfMonth, fecha.monthNumber, fecha.year)
+    }
     df = df.convert { "CUIT"<String>() }.with { it.replace("-", "") }
     return df
 }
 
 @Throws(IllegalStateException::class)
 fun setupTablasAfip(rutas: List<Path>): DataFrame<*> {
-    var df = dataFrameOf(COLUMNAS, listOf())
+    val tablas = mutableListOf<DataFrame<*>>()
 
-    rutas.forEach { ruta ->
-        df = df.concat(setupTablaAfip(ruta))
+    for (ruta in rutas) {
+        val rutaProcesada = setupTablaAfip(ruta)
+        tablas.add(rutaProcesada)
     }
-    return df
+    return tablas.concat()
 }
 
 @Throws(IllegalStateException::class)
 fun setupTablasTango(rutas: List<Path>): DataFrame<*> {
-    var df = dataFrameOf(COLUMNAS, listOf())
+    val tablas = mutableListOf<DataFrame<*>>()
 
-    rutas.forEach { ruta ->
-        df = df.concat(setupTablaTango(ruta))
+    for (ruta in rutas) {
+        val rutaProcesada = setupTablaTango(ruta)
+        tablas.add(rutaProcesada)
     }
-    return df
+    return tablas.concat()
 }
