@@ -59,6 +59,9 @@ compose.desktop {
                 iconFile.set(project.file("resources/icon.ico"))
             }
         }
+        buildTypes.release.proguard {
+            configurationFiles.from(project.file("compose-desktop.pro"))
+        }
     }
 }
 
