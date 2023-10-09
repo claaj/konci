@@ -7,39 +7,36 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import ui.conciliar.tabs.lista.TabEstadoLista
 import ui.conciliar.tabs.lista.TabLista
-import ui.conciliar.tabs.procesar.TabEstadoProcesar
 import ui.conciliar.tabs.procesar.TabProcesar
-import java.nio.file.Path
+import ui.conciliar.tabs.procesar.TabProcesarEstado
 
 @Composable
 fun TabsConciliar(
     estado: TabsConciliarEstado,
     nombreProceso: String,
-    nombreImpuesto: String,
-    setupExternos: (List<Path>) -> DataFrame<*>,
-    setupLocales: (List<Path>) -> DataFrame<*>,
 ) {
+    var indexActual by remember { mutableStateOf(estado.indexAcutal.value) }
+
     Column(
         modifier = Modifier.fillMaxHeight().padding(end = 20.dp, top = 10.dp, start = 20.dp),
     ) {
         Text(
-            text = "$nombreProceso - $nombreImpuesto",
+            text = "$nombreProceso - ${estado.tituloImpuesto}",
             fontSize = 20.sp,
             modifier = Modifier.padding(top = 10.dp, bottom = 15.dp),
             fontWeight = FontWeight.Bold
         )
 
         TabRow(
-            selectedTabIndex = estado.indexAcutal.value,
+            selectedTabIndex = indexActual,
             modifier = Modifier.clip(RoundedCornerShape(50)),
             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
             indicator = { _ ->
@@ -48,10 +45,10 @@ fun TabsConciliar(
             divider = { Box {} }
         ) {
             estado.items.forEachIndexed { index, pagina ->
-                val seleccionado = estado.indexAcutal.value == index
+                val seleccionado = indexActual == index
                 Tab(
-                    selected = estado.indexAcutal.value == index,
-                    onClick = { estado.indexAcutal.value = index },
+                    selected = indexActual == index,
+                    onClick = { indexActual = index },
                     modifier = if (seleccionado) Modifier.clip(RoundedCornerShape(50))
                         .background(MaterialTheme.colorScheme.primaryContainer)
                     else Modifier.clip(RoundedCornerShape(50))
@@ -66,15 +63,17 @@ fun TabsConciliar(
                 )
             }
         }
-        when (estado.items[estado.indexAcutal.value].tipo) {
-            TabTipo.PLANILLA -> TabLista(estado.items[estado.indexAcutal.value] as TabEstadoLista)
-            TabTipo.PROCESAR -> TabProcesar(
-                estado.items[estado.indexAcutal.value] as TabEstadoProcesar,
-                nombreProceso,
-                nombreImpuesto,
-                setupExternos,
-                setupLocales
-            )
+        when (estado.items[indexActual].tipo) {
+            TabTipo.PLANILLA -> TabLista(estado.items[indexActual] as TabEstadoLista)
+            TabTipo.PROCESAR -> {
+                TabProcesar(
+                    estado.items[indexActual] as TabProcesarEstado,
+                    nombreProceso,
+                    estado.impuesto.titulo,
+                    estado.impuesto.setupExternos,
+                    estado.impuesto.setupLocales,
+                )
+            }
         }
     }
 }

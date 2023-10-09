@@ -15,13 +15,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import ui.conciliar.tabs.TabsConciliarEstado
 import java.nio.file.Path
 import javax.swing.JFileChooser
 
 @Composable
 fun TabProcesar(
-    estado: TabEstadoProcesar,
+    estado: TabProcesarEstado,
     nombreProceso: String,
     nombreImpuesto: String,
     setupExternos: (List<Path>) -> DataFrame<*>,

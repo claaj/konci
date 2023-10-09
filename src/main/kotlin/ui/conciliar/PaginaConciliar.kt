@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -15,6 +15,8 @@ import ui.conciliar.tabs.TabsConciliar
 
 @Composable
 fun PaginaConciliar(estado: PaginaConciliarEstado) {
+    var indexActual by remember { mutableStateOf(estado.indexActual.value) }
+
     Row {
         Divider(
             modifier = Modifier.fillMaxHeight().width(1.dp),
@@ -30,9 +32,9 @@ fun PaginaConciliar(estado: PaginaConciliarEstado) {
                     Impuestos.entries.forEachIndexed { index, operacion ->
                         NavigationDrawerItem(
                             label = { Text(text = operacion.titulo, fontSize = 14.sp) },
-                            selected = index == estado.indexActual.value,
+                            selected = index == indexActual,
                             onClick = {
-                                estado.indexActual.value = index
+                                indexActual = index
                             },
                             modifier = Modifier.padding(10.dp),
                             colors = NavigationDrawerItemDefaults.colors(
@@ -47,13 +49,7 @@ fun PaginaConciliar(estado: PaginaConciliarEstado) {
             }
         ) {
             Surface {
-                TabsConciliar(
-                    estado.impuestos[estado.indexActual.value].tabsConciliar,
-                    estado.titulo,
-                    estado.impuestos[estado.indexActual.value].titulo,
-                    estado.impuestos[estado.indexActual.value].setupExternos,
-                    estado.impuestos[estado.indexActual.value].setupLocales,
-                )
+                TabsConciliar(estado.procesos[indexActual], estado.titulo)
             }
         }
     }
