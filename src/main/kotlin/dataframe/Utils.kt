@@ -2,33 +2,25 @@ package dataframe
 
 import kotlinx.datetime.LocalDate
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.last
 
-fun stringToLocalDate(cadena: String?): LocalDate {
-    var fecha = LocalDate(2000, 1, 1)
-    if (cadena != null) {
-        val split = cadena.dropLast(6).split("-")
-        if (split.size == 3) fecha = LocalDate(split[0].toInt(), split[1].toInt(), split[2].toInt())
-    }
-    return fecha
+fun stringToLocalDate(cadena: String): LocalDate {
+    val split = cadena.split("/")
+    return LocalDate(split[2].toInt(), split[1].toInt(), split[0].toInt())
 }
 
 fun fechaMayorTabla(df: DataFrame<*>): LocalDate {
-    val fechas = df.getColumn { "FECHA"<String>() }.toList()
-    var fechaMayor = LocalDate(2000, 1, 1)
-    for (fecha in fechas) {
-        val fechaCast = fechaMayorConversion(fecha)
-        if (fechaMayor < fechaCast) {
-            fechaMayor = fechaCast
-        }
+    val fechas = df.getColumn { "FECHA"<LocalDate>() }
+    var fechaMayor = fechas[0]
+    var fechaFiltrado = fechas.filter { it > fechaMayor }
+    while (fechaFiltrado.count() > 0) {
+        fechaMayor = fechaFiltrado.last()
+        fechaFiltrado = fechaFiltrado.filter { it > fechaMayor }
     }
     return fechaMayor
-}
-
-private fun fechaMayorConversion(cadena: String): LocalDate {
-    val split = cadena.split("/")
-    return LocalDate(split[2].toInt(), split[1].toInt(), split[0].toInt())
 }
 
 fun cuitsUnicos(dfExterno: DataFrame<*>, dfLocal: DataFrame<*>): List<String> {

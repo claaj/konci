@@ -1,8 +1,11 @@
 package dataframe
 
+import dataframe.errores.FormatoInvalidoException
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.io.*
+import org.jetbrains.kotlinx.dataframe.io.readExcel
 import java.nio.file.Path
 import kotlin.math.absoluteValue
 
@@ -40,62 +43,60 @@ fun conciliar(
 }
 
 private fun setupTablaAfip(ruta: Path): DataFrame<*> {
-    var df = DataFrame.readExcel(ruta.toString())
-
-    df = df.select {
-        col("CUIT Agente Ret./Perc.") and col("Denominación o Razón Social") and col("Número Comprobante") and col("Fecha Comprobante") and col(
-            "Importe Ret./Perc."
-        )
-    }
-
-    df = df.rename("CUIT Agente Ret./Perc.").into("CUIT")
-    df = df.rename("Denominación o Razón Social").into("RAZON_SOC")
-    df = df.rename("Importe Ret./Perc.").into("IMPORTE")
-    df = df.rename("Número Comprobante").into("N_COMP")
-    df = df.rename("Fecha Comprobante").into("FECHA")
-    df = df.add("ORIGEN") { "AFIP" }
-    df = df.convert("CUIT").with { it.toString() }
-
-    df = df.convert("FECHA").with { it.toString() }
-
+    val df = DataFrame.readExcel(ruta.toString())
+        .select {
+            col("CUIT Agente Ret./Perc.") and col("Denominación o Razón Social") and col("Número Comprobante") and col("Fecha Comprobante") and col(
+                "Importe Ret./Perc."
+            )
+        }
+        .rename("CUIT Agente Ret./Perc.").into("CUIT")
+        .rename("Denominación o Razón Social").into("RAZON_SOC")
+        .rename("Importe Ret./Perc.").into("IMPORTE")
+        .rename("Número Comprobante").into("N_COMP")
+        .rename("Fecha Comprobante").into("FECHA")
+        .add("ORIGEN") { "AFIP" }
+        .convert("CUIT").with { it.toString() }
+        .convert { "FECHA"<String>() }.with { stringToLocalDate(it) }
     return df
 }
 
 private fun setupTablaTango(ruta: Path): DataFrame<*> {
-    var df = DataFrame.readExcel(ruta.toString())
-
-    df = df.select {
-        col("CUIT") and col("RAZON_SOC") and col("N_COMP") and col("FECH_COMP") and col("IMPORTE")
-    }
-
-    df = df.rename("FECH_COMP").into("FECHA")
-    df = df.add("ORIGEN") { "TANGO" }
-    df = df.convert("FECHA").with {
-        val fecha = stringToLocalDate(it.toString())
-        String.format("%02d/%02d/%02d", fecha.dayOfMonth, fecha.monthNumber, fecha.year)
-    }
-    df = df.convert { "CUIT"<String>() }.with { it.replace("-", "") }
+    val df = DataFrame.readExcel(ruta.toString())
+        .select {
+            col("CUIT") and col("RAZON_SOC") and col("N_COMP") and col("FECH_COMP") and col("IMPORTE")
+        }
+        .dropNulls()
+        .add("ORIGEN") { "TANGO" }
+        .rename("FECH_COMP").into("FECHA")
+        .convert { "FECHA"<LocalDateTime>() }.with { LocalDate(it.year, it.monthNumber, it.dayOfMonth) }
+        .convert { "CUIT"<String>() }.with { it.replace("-", "") }
     return df
 }
 
-@Throws(IllegalStateException::class)
 fun setupTablasAfip(rutas: List<Path>): DataFrame<*> {
     val tablas = mutableListOf<DataFrame<*>>()
 
     for (ruta in rutas) {
-        val rutaProcesada = setupTablaAfip(ruta)
-        tablas.add(rutaProcesada)
+        try {
+            val rutaProcesada = setupTablaAfip(ruta)
+            tablas.add(rutaProcesada)
+        } catch (_: IllegalStateException) {
+            throw FormatoInvalidoException(ruta.toString())
+        }
     }
     return tablas.concat()
 }
 
-@Throws(IllegalStateException::class)
 fun setupTablasTango(rutas: List<Path>): DataFrame<*> {
     val tablas = mutableListOf<DataFrame<*>>()
 
     for (ruta in rutas) {
-        val rutaProcesada = setupTablaTango(ruta)
-        tablas.add(rutaProcesada)
+        try {
+            val rutaProcesada = setupTablaTango(ruta)
+            tablas.add(rutaProcesada)
+        } catch (_: IllegalStateException) {
+            throw FormatoInvalidoException(ruta.toString())
+        }
     }
     return tablas.concat()
 }
