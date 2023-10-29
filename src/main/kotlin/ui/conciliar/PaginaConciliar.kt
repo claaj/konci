@@ -26,7 +26,7 @@ fun PaginaConciliar(estado: PaginaConciliarEstado) {
         PermanentNavigationDrawer(
             drawerContent = {
                 PermanentDrawerSheet(
-                    modifier = Modifier.width(200.dp).clip(RoundedCornerShape(topEnd = 20.dp)),
+                    modifier = Modifier.width(200.dp).clip(RoundedCornerShape(topEnd = 16.dp)),
                     drawerContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
                 ) {
                     Impuestos.entries.forEachIndexed { index, operacion ->
@@ -36,7 +36,7 @@ fun PaginaConciliar(estado: PaginaConciliarEstado) {
                             onClick = {
                                 indexActual = index
                             },
-                            modifier = Modifier.padding(10.dp),
+                            modifier = Modifier.padding(8.dp),
                             colors = NavigationDrawerItemDefaults.colors(
                                 selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                                 selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,

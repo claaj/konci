@@ -7,9 +7,9 @@ import java.nio.file.Path
 
 enum class Impuestos(
     val titulo: String,
-    val nombrePrimerTab: String,
-    val nombreSegundoTab: String,
-    val nombreTercerTab: String,
+    val nombreListaExterna: String,
+    val nombreListaLocal: String,
+    val nombreProcesar: String,
     val setupExternos: (List<Path>) -> DataFrame<*>,
     val setupLocales: (List<Path>) -> DataFrame<*>,
 ) {

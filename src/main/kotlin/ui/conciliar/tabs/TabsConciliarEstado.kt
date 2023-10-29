@@ -15,9 +15,16 @@ data class TabsConciliarEstado(
     private var listaExterno = mutableStateListOf<Path>()
     private var listaLocal = mutableStateListOf<Path>()
     val items: List<TabEstado> = listOf(
-        TabEstadoLista(impuesto.nombrePrimerTab, TabTipo.PLANILLA, listaExterno),
-        TabEstadoLista(impuesto.nombreSegundoTab, TabTipo.PLANILLA, listaLocal),
-        TabProcesarEstado(impuesto.nombreTercerTab, TabTipo.PROCESAR, listaExterno, listaLocal),
+        TabEstadoLista(impuesto.nombreListaExterna, TabTipo.PLANILLA, listaExterno),
+        TabEstadoLista(impuesto.nombreListaLocal, TabTipo.PLANILLA, listaLocal),
+        TabProcesarEstado(
+            TabTipo.PROCESAR,
+            listaExterno,
+            listaLocal,
+            impuesto.nombreProcesar,
+            impuesto.nombreListaExterna,
+            impuesto.nombreListaExterna
+        ),
     )
     val tituloImpuesto = impuesto.titulo
 

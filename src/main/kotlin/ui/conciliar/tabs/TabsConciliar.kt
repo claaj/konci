@@ -26,12 +26,12 @@ fun TabsConciliar(
     var indexActual by remember { mutableStateOf(estado.indexAcutal.value) }
 
     Column(
-        modifier = Modifier.fillMaxHeight().padding(end = 20.dp, top = 10.dp, start = 20.dp),
+        modifier = Modifier.fillMaxHeight().padding(end = 16.dp, top = 8.dp, start = 16.dp),
     ) {
         Text(
             text = "$nombreProceso - ${estado.tituloImpuesto}",
             fontSize = 20.sp,
-            modifier = Modifier.padding(top = 10.dp, bottom = 15.dp),
+            modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
             fontWeight = FontWeight.Bold
         )
 
