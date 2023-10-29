@@ -19,28 +19,37 @@ import kotlin.io.path.toPath
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ZonaArrastrarSoltar(agregarRuta: (List<Path>) -> Unit) {
-    Box(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-        arrastarSoltar { dragData ->
-            if (dragData is DragData.FilesList) {
-                val archivosArrastrados = dragData.readFiles().mapNotNull { rutaString ->
-                    URI(rutaString).toPath().takeIf { it.exists(LinkOption.NOFOLLOW_LINKS) }
+fun ZonaArrastrarSoltar(agregarRuta: (Path) -> Unit) {
+    val extensionesPermitidas = listOf("xls", "xlsx")
+    Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+        arrastarSoltar(
+            onDrop = { dragData ->
+                if (dragData is DragData.FilesList) {
+                    val archivosArrastrados = dragData.readFiles().mapNotNull { rutaString ->
+                        URI(rutaString).toPath().takeIf { it.exists(LinkOption.NOFOLLOW_LINKS) }
+                    }
+
+                    archivosArrastrados.forEach { ruta ->
+                        if (checkExtensionArchivo(ruta, extensionesPermitidas)) {
+                            agregarRuta(ruta)
+                        }
+                    }
                 }
-                agregarRuta(archivosArrastrados)
             }
-        }
+        )
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun arrastarSoltar(onDrop: (DragData) -> Unit) {
+private fun arrastarSoltar(
+    onDrop: (DragData) -> Unit,
+) {
     var arrastrando by remember { mutableStateOf(false) }
     Surface(
         color = MaterialTheme.colorScheme.secondaryContainer,
         shape = MaterialTheme.shapes.medium,
-        modifier = Modifier.onExternalDrag(
-            onDragStart = { arrastrando = true },
+        modifier = Modifier.onExternalDrag(onDragStart = { arrastrando = true },
             onDragExit = { arrastrando = false },
             onDrop = { valor ->
                 arrastrando = false
@@ -54,16 +63,20 @@ private fun arrastarSoltar(onDrop: (DragData) -> Unit) {
         ) {
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = "Arrastra y suelta tus archivos aquí",
+                text = "Arrastra y solta tus archivos aquí",
                 fontSize = 14.sp,
             )
 
             Icon(
                 painter = painterResource("drag-drop-fill.svg"),
-                modifier = Modifier.size(50.dp).padding(10.dp),
+                modifier = Modifier.size(50.dp).padding(8.dp),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground
             )
         }
     }
+}
+
+internal fun checkExtensionArchivo(archivo: Path, extensionesPermitidas: List<String>): Boolean {
+    return extensionesPermitidas.contains(archivo.toFile().extension)
 }
