@@ -2,8 +2,9 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 
 plugins {
-    kotlin("jvm")
-    id("org.jetbrains.compose")
+    kotlin("jvm") version "1.9.10"
+    id("org.jetbrains.compose") version "1.5.3"
+    id("org.jetbrains.kotlinx.dataframe") version "0.12.0"
 }
 
 group = "com.claaj"
@@ -23,8 +24,8 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation(compose.material3)
     implementation(compose.materialIconsExtended)
-    implementation("org.jetbrains.kotlinx:dataframe:0.11.1")
-    implementation("org.jetbrains.kotlinx:dataframe-excel:0.11.1")
+    implementation("org.jetbrains.kotlinx:dataframe:0.12.0")
+    implementation("org.jetbrains.kotlinx:dataframe-excel:0.12.0")
     implementation("org.apache.logging.log4j:log4j-api:2.20.0")
     implementation("org.apache.logging.log4j:log4j-core:2.20.0")
     testImplementation(kotlin("test"))
