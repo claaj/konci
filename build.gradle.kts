@@ -37,7 +37,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "ui.MainKt"
+        mainClass = "com.github.claaj.konci.ui.MainKt"
 
         nativeDistributions {
             includeAllModules = true
@@ -76,7 +76,7 @@ tasks.test {
     useJUnitPlatform()
 }
 
-val mainClass = "ui.MainKt"
+val mainClass = "com.github.claaj.konci.ui.MainKt"
 
 tasks {
     register("Jar", Jar::class.java) {
