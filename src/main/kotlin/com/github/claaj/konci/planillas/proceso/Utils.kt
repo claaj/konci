@@ -1,4 +1,4 @@
-package com.github.claaj.konci.dataframe
+package com.github.claaj.konci.planillas.proceso
 
 import kotlinx.datetime.LocalDate
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -6,10 +6,18 @@ import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.last
+import java.math.BigDecimal
 
 fun stringToLocalDate(cadena: String): LocalDate {
     val split = cadena.split("/")
     return LocalDate(split[2].toInt(), split[1].toInt(), split[0].toInt())
+}
+
+fun cuitAfipCastAString(cuit: Any?): String {
+    return when (cuit) {
+        is Double -> BigDecimal(cuit).toPlainString()
+        else -> cuit.toString()
+    }
 }
 
 fun fechaMayorTabla(df: DataFrame<*>): LocalDate {
@@ -26,7 +34,7 @@ fun fechaMayorTabla(df: DataFrame<*>): LocalDate {
 fun cuitsUnicos(dfExterno: DataFrame<*>, dfLocal: DataFrame<*>): List<String> {
     val listaExternos = listaCuits(dfExterno)
     val listaLocales = listaCuits(dfLocal)
-    val listaUnicos = ArrayList<String>()
+    val listaUnicos = mutableListOf<String>()
 
     for (cuitExterno in listaExternos) {
         if (!listaUnicos.contains(cuitExterno)) {
@@ -50,9 +58,9 @@ fun importesPorCuit(df: DataFrame<*>, cuit: String): List<Double> {
     return df.filter { "CUIT"<String>() == cuit }.getColumn { "IMPORTE"<Double>() }.toList()
 }
 
-fun importesPorCuitUnicos(df: DataFrame<*>, cuit: String): ArrayList<Double> {
+fun importesPorCuitUnicos(df: DataFrame<*>, cuit: String): List<Double> {
     val importes = importesPorCuit(df, cuit)
-    val importesUnicos = ArrayList<Double>()
+    val importesUnicos = mutableListOf<Double>()
     for (importe in importes) {
         if (!importesUnicos.contains(importe)) {
             importesUnicos.add(importe)
@@ -62,7 +70,7 @@ fun importesPorCuitUnicos(df: DataFrame<*>, cuit: String): ArrayList<Double> {
 }
 
 fun importesPorCuitUnicosTotal(dfExterno: DataFrame<*>, dfLocal: DataFrame<*>, cuit: String): List<Double> {
-    val importesExternos = importesPorCuitUnicos(dfExterno, cuit)
+    val importesExternos = importesPorCuitUnicos(dfExterno, cuit).toMutableList()
     val importesLocales = importesPorCuitUnicos(dfLocal, cuit)
 
     for (importe in importesLocales) {

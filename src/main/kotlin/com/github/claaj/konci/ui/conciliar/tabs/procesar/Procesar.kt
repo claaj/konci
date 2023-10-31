@@ -1,14 +1,14 @@
 package com.github.claaj.konci.ui.conciliar.tabs.procesar
 
-import com.github.claaj.konci.dataframe.conciliar
-import com.github.claaj.konci.dataframe.errores.ProcesoException
-import com.github.claaj.konci.dataframe.fechaMayorTabla
+import com.github.claaj.konci.planillas.errores.ProcesoException
+import com.github.claaj.konci.planillas.proceso.conciliar
+import com.github.claaj.konci.planillas.proceso.fechaMayorTabla
+import com.github.claaj.konci.ui.conciliar.tabs.procesar.errores.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.writeExcel
-import com.github.claaj.konci.ui.conciliar.tabs.procesar.errores.*
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -26,6 +26,8 @@ internal fun conciliarActuales(
     origenExterno: String,
     origenLocal: String,
     dialogo: (String, Dialogo) -> Unit,
+    abrirDialogoProcesando: () -> Unit,
+    cerrarDialogoProcesando: () -> Unit
 ) {
     var tipoDialogo = Dialogo.Exito
     var descripcionDialogo = "Se procesaron correctamente todas las planillas."
@@ -33,6 +35,7 @@ internal fun conciliarActuales(
     CoroutineScope(Dispatchers.IO).launch {
         try {
             checkEstadosParaConciliar(archivosExternos, archivosLocales, rutaCarpeta, origenExterno, origenLocal)
+            abrirDialogoProcesando()
             val dfFiltrado = conciliar(archivosExternos, archivosLocales, setupExternos, setupLocales)
             guardadoProcesado(rutaCarpeta as String, nombreCarpeta, nombreArchivo, dfFiltrado)
         } catch (listaExcep: ListaException) {
@@ -45,12 +48,13 @@ internal fun conciliarActuales(
             tipoDialogo = Dialogo.Aviso
             descripcionDialogo = rutaExcep.message ?: ""
         } finally {
+            cerrarDialogoProcesando()
             dialogo(descripcionDialogo, tipoDialogo)
         }
     }
 }
 
-private fun guardadoProcesado(rutaCarpeta: String, nombreCarpeta: String, nombreArchivo: String, df: DataFrame<*>) {
+internal fun guardadoProcesado(rutaCarpeta: String, nombreCarpeta: String, nombreArchivo: String, df: DataFrame<*>) {
     val fecha = fechaMayorTabla(df)
     val fechaString = "${fecha.year}-${String.format("%02d", fecha.monthNumber)}"
     val rutaGuardado = Path(rutaCarpeta, nombreCarpeta, fechaString)
@@ -59,7 +63,7 @@ private fun guardadoProcesado(rutaCarpeta: String, nombreCarpeta: String, nombre
     df.writeExcel(rutaGuardadoArchivo)
 }
 
-private fun checkEstadosParaConciliar(
+internal fun checkEstadosParaConciliar(
     listaExterna: List<Path>, listaLocal: List<Path>, rutaGuardado: String?, origenExterno: String, origenLocal: String
 ) {
     if (rutaGuardado == null) throw RutaGuardadoSinSeleccionarException()

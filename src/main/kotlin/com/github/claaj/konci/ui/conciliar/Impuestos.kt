@@ -1,7 +1,7 @@
 package com.github.claaj.konci.ui.conciliar
 
-import com.github.claaj.konci.dataframe.setupTablasAfip
-import com.github.claaj.konci.dataframe.setupTablasTango
+import com.github.claaj.konci.planillas.formatear.tablasAfip
+import com.github.claaj.konci.planillas.formatear.tablasTango
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import java.nio.file.Path
 
@@ -18,15 +18,15 @@ enum class Impuestos(
         "AFIP",
         "Tango",
         "Conciliar",
-        ::setupTablasAfip,
-        ::setupTablasTango
+        ::tablasAfip,
+        ::tablasTango
     ),
     GANANCIAS(
         "Ganancias",
         "AFIP",
         "Tango",
         "Conciliar",
-        ::setupTablasAfip,
-        ::setupTablasTango
+        ::tablasAfip,
+        ::tablasTango
     ),
 }

@@ -1,4 +1,4 @@
-package com.github.claaj.konci.dataframe.errores
+package com.github.claaj.konci.planillas.errores
 
 open class ProcesoException(descripcion: String) : Exception(descripcion)
 
