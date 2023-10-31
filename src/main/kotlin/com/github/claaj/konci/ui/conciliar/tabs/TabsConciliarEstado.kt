@@ -1,8 +1,6 @@
 package com.github.claaj.konci.ui.conciliar.tabs
 
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import com.github.claaj.konci.ui.conciliar.Impuestos
 import com.github.claaj.konci.ui.conciliar.tabs.lista.TabEstadoLista
 import com.github.claaj.konci.ui.conciliar.tabs.procesar.TabProcesarEstado
@@ -28,5 +26,5 @@ data class TabsConciliarEstado(
     )
     val tituloImpuesto = impuesto.titulo
 
-    var indexAcutal = mutableStateOf(0)
+    var indexAcutal by mutableStateOf(0)
 }

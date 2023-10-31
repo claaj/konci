@@ -1,8 +1,9 @@
 package com.github.claaj.konci.ui.conciliar.tabs.procesar
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.github.claaj.konci.ui.conciliar.tabs.TabEstado
 import com.github.claaj.konci.ui.conciliar.tabs.TabTipo
@@ -17,5 +18,5 @@ data class TabProcesarEstado(
     val origenExterno: String,
     val origenLocal: String,
 ) : TabEstado {
-    var rutaGuardado: MutableState<String?> = mutableStateOf(null)
+    var rutaGuardado: String? by mutableStateOf(null)
 }
