@@ -19,7 +19,7 @@ import kotlin.io.path.toPath
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ZonaArrastrarSoltar(agregarRuta: (Path) -> Unit) {
+internal fun ZonaArrastrarSoltar(agregarRuta: (Path) -> Unit) {
     val extensionesPermitidas = listOf("xls", "xlsx")
     Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
         arrastarSoltar(
@@ -42,7 +42,7 @@ fun ZonaArrastrarSoltar(agregarRuta: (Path) -> Unit) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun arrastarSoltar(
+internal fun arrastarSoltar(
     onDrop: (DragData) -> Unit,
 ) {
     var arrastrando by remember { mutableStateOf(false) }

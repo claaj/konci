@@ -42,7 +42,7 @@ fun TabLista(estado: TabEstadoLista) {
 }
 
 @Composable
-private fun ElementoLista(ruta: Path, eliminarRuta: (Path) -> Unit) {
+internal fun ElementoLista(ruta: Path, eliminarRuta: (Path) -> Unit) {
     val nombreArchivo = ruta.toFile().name
     Surface(
         modifier = Modifier.padding(8.dp).height(80.dp),
