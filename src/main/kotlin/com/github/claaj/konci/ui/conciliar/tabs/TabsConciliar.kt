@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -23,8 +23,6 @@ fun TabsConciliar(
     estado: TabsConciliarEstado,
     nombreProceso: String,
 ) {
-    var indexActual by remember { mutableStateOf(estado.indexAcutal.value) }
-
     Column(
         modifier = Modifier.fillMaxHeight().padding(end = 16.dp, top = 8.dp, start = 16.dp),
     ) {
@@ -36,7 +34,7 @@ fun TabsConciliar(
         )
 
         TabRow(
-            selectedTabIndex = indexActual,
+            selectedTabIndex = estado.indexAcutal,
             modifier = Modifier.clip(RoundedCornerShape(50)),
             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
             indicator = { _ ->
@@ -45,10 +43,10 @@ fun TabsConciliar(
             divider = { Box {} }
         ) {
             estado.items.forEachIndexed { index, pagina ->
-                val seleccionado = indexActual == index
+                val seleccionado = estado.indexAcutal == index
                 Tab(
-                    selected = indexActual == index,
-                    onClick = { indexActual = index },
+                    selected = estado.indexAcutal == index,
+                    onClick = { estado.indexAcutal = index },
                     modifier = if (seleccionado) Modifier.clip(RoundedCornerShape(50))
                         .background(MaterialTheme.colorScheme.primaryContainer)
                     else Modifier.clip(RoundedCornerShape(50))
@@ -63,11 +61,11 @@ fun TabsConciliar(
                 )
             }
         }
-        when (estado.items[indexActual].tipo) {
-            TabTipo.PLANILLA -> TabLista(estado.items[indexActual] as TabEstadoLista)
+        when (estado.items[estado.indexAcutal].tipo) {
+            TabTipo.PLANILLA -> TabLista(estado.items[estado.indexAcutal] as TabEstadoLista)
             TabTipo.PROCESAR -> {
                 TabProcesar(
-                    estado.items[indexActual] as TabProcesarEstado,
+                    estado.items[estado.indexAcutal] as TabProcesarEstado,
                     nombreProceso,
                     estado.impuesto.titulo,
                     estado.impuesto.setupExternos,

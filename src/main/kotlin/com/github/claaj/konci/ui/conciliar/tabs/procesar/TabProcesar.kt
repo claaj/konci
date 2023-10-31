@@ -26,6 +26,7 @@ fun TabProcesar(
     var mostrarDialogo by remember { mutableStateOf(false) }
     var descripcionDialogo by remember { mutableStateOf("") }
     var tipoDialogo by remember { mutableStateOf(Dialogo.Aviso) }
+    var dialogoProcesando by remember { mutableStateOf(false) }
 
     val elegirCarpeta = JFileChooser().apply {
         fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
@@ -39,7 +40,7 @@ fun TabProcesar(
             ExtendedFloatingActionButton(
                 onClick = {
                     conciliarActuales(
-                        rutaCarpeta = estado.rutaGuardado.value,
+                        rutaCarpeta = estado.rutaGuardado,
                         nombreCarpeta = "$nombreProceso-$nombreImpuesto",
                         nombreArchivo = "procesado",
                         archivosExternos = estado.listaExterno.toList(),
@@ -53,6 +54,8 @@ fun TabProcesar(
                             tipoDialogo = tipo
                             mostrarDialogo = true
                         },
+                        abrirDialogoProcesando = { dialogoProcesando = true },
+                        cerrarDialogoProcesando = { dialogoProcesando = false }
                     )
                 },
                 containerColor = MaterialTheme.colorScheme.primary
@@ -70,7 +73,7 @@ fun TabProcesar(
                         onClick = {
                             elegirCarpeta.showOpenDialog(null)
                             if (elegirCarpeta.selectedFile != null) {
-                                estado.rutaGuardado.value = elegirCarpeta.selectedFile.toString()
+                                estado.rutaGuardado = elegirCarpeta.selectedFile.toString()
                             }
                         }
                     ) {
@@ -82,7 +85,7 @@ fun TabProcesar(
                             .clip(RoundedCornerShape(25)).height(38.dp),
                     ) {
                         Text(
-                            text = estado.rutaGuardado.value.orEmpty(),
+                            text = estado.rutaGuardado.orEmpty(),
                             textAlign = TextAlign.Start,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
@@ -98,6 +101,10 @@ fun TabProcesar(
                     cerrarAlerta = { mostrarDialogo = false },
                     descripcion = descripcionDialogo
                 )
+            }
+
+            if (dialogoProcesando) {
+                dialogoProcesando { dialogoProcesando = false }
             }
         }
     }

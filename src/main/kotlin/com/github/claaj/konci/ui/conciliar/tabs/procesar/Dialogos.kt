@@ -29,7 +29,6 @@ internal fun dialogo(
     cerrarAlerta: () -> Unit,
     descripcion: String,
 ) {
-
     val colorSurface: Color
     val colorLetra: Color
     val icono: ImageVector
@@ -102,6 +101,33 @@ internal fun dialogo(
                         Text("Entendido", color = colorLetra)
                     }
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun dialogoProcesando(visible: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = visible,
+    ) {
+        Surface(
+            modifier = Modifier.wrapContentHeight().wrapContentWidth().width(256.dp).height(256.dp),
+            color = MaterialTheme.colorScheme.primaryContainer,
+            shape = MaterialTheme.shapes.extraLarge,
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                Text("Procesando...")
             }
         }
     }
