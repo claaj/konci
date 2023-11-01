@@ -45,8 +45,8 @@ fun TabProcesar(
                         nombreArchivo = "procesado",
                         archivosExternos = estado.listaExterno.toList(),
                         archivosLocales = estado.listaLocal.toList(),
-                        setupExternos = setupExternos,
-                        setupLocales = setupLocales,
+                        formatearExternos = setupExternos,
+                        formatearLocales = setupLocales,
                         origenExterno = estado.origenExterno,
                         origenLocal = estado.origenLocal,
                         dialogo = { descripcion, tipo ->

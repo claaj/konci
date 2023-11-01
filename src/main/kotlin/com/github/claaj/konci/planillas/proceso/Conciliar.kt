@@ -13,11 +13,11 @@ val COLUMNAS = listOf("CUIT", "RAZON_SOC", "N_COMP", "FECHA", "IMPORTE")
 fun conciliar(
     archivosExternos: List<Path>,
     archivosLocales: List<Path>,
-    setupExternos: (List<Path>) -> DataFrame<*>,
-    setupLocales: (List<Path>) -> DataFrame<*>
+    formatearExternos: (List<Path>) -> DataFrame<*>,
+    formatearLocales: (List<Path>) -> DataFrame<*>
 ): DataFrame<*> {
-    val dfExterno = setupExternos(archivosExternos)
-    val dfLocal = setupLocales(archivosLocales)
+    val dfExterno = formatearExternos(archivosExternos)
+    val dfLocal = formatearLocales(archivosLocales)
     var dfFiltrado = dataFrameOf(COLUMNAS, listOf())
 
     val cuitsUnicos = cuitsUnicos(dfExterno, dfLocal)

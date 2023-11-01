@@ -21,8 +21,8 @@ internal fun conciliarActuales(
     nombreArchivo: String,
     archivosExternos: List<Path>,
     archivosLocales: List<Path>,
-    setupExternos: (List<Path>) -> DataFrame<*>,
-    setupLocales: (List<Path>) -> DataFrame<*>,
+    formatearExternos: (List<Path>) -> DataFrame<*>,
+    formatearLocales: (List<Path>) -> DataFrame<*>,
     origenExterno: String,
     origenLocal: String,
     dialogo: (String, Dialogo) -> Unit,
@@ -36,7 +36,7 @@ internal fun conciliarActuales(
         try {
             checkEstadosParaConciliar(archivosExternos, archivosLocales, rutaCarpeta, origenExterno, origenLocal)
             abrirDialogoProcesando()
-            val dfFiltrado = conciliar(archivosExternos, archivosLocales, setupExternos, setupLocales)
+            val dfFiltrado = conciliar(archivosExternos, archivosLocales, formatearExternos, formatearLocales)
             guardadoProcesado(rutaCarpeta as String, nombreCarpeta, nombreArchivo, dfFiltrado)
         } catch (listaExcep: ListaException) {
             tipoDialogo = Dialogo.Aviso

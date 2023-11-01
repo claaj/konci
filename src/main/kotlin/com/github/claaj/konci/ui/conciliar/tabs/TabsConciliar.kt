@@ -68,8 +68,8 @@ fun TabsConciliar(
                     estado.items[estado.indexAcutal] as TabProcesarEstado,
                     nombreProceso,
                     estado.impuesto.titulo,
-                    estado.impuesto.setupExternos,
-                    estado.impuesto.setupLocales,
+                    estado.impuesto.formatearExternos,
+                    estado.impuesto.formatearLocales,
                 )
             }
         }

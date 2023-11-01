@@ -10,8 +10,8 @@ enum class Impuestos(
     val nombreListaExterna: String,
     val nombreListaLocal: String,
     val nombreProcesar: String,
-    val setupExternos: (List<Path>) -> DataFrame<*>,
-    val setupLocales: (List<Path>) -> DataFrame<*>,
+    val formatearExternos: (List<Path>) -> DataFrame<*>,
+    val formatearLocales: (List<Path>) -> DataFrame<*>,
 ) {
     IVA(
         "IVA",
