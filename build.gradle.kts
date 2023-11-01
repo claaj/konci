@@ -28,6 +28,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:dataframe-excel:0.12.0")
     implementation("org.apache.logging.log4j:log4j-api:2.20.0")
     implementation("org.apache.logging.log4j:log4j-core:2.20.0")
+    implementation("com.darkrockstudios:mpfilepicker:2.1.0")
     testImplementation(kotlin("test"))
 }
 

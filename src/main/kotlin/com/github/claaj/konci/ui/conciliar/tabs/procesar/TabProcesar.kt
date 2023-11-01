@@ -11,9 +11,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.darkrockstudios.libraries.mpfilepicker.DirectoryPicker
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import java.nio.file.Path
-import javax.swing.JFileChooser
 
 @Composable
 fun TabProcesar(
@@ -27,12 +27,11 @@ fun TabProcesar(
     var descripcionDialogo by remember { mutableStateOf("") }
     var tipoDialogo by remember { mutableStateOf(Dialogo.Aviso) }
     var dialogoProcesando by remember { mutableStateOf(false) }
+    var mostrarExplorador by remember { mutableStateOf(false) }
 
-    val elegirCarpeta = JFileChooser().apply {
-        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-        dialogTitle = "Seleccione una carpeta de guardado"
-        approveButtonText = "Seleccionar"
-        approveButtonToolTipText = "Seleccionar la carpeta actual como la ruta de guardado"
+    DirectoryPicker(mostrarExplorador) { ruta ->
+        estado.rutaGuardado = ruta
+        mostrarExplorador = false
     }
 
     Scaffold(
@@ -70,12 +69,7 @@ fun TabProcesar(
                 Text("Carpeta guardado")
                 Row(Modifier.padding(top = 8.dp, bottom = 8.dp)) {
                     FilledTonalButton(
-                        onClick = {
-                            elegirCarpeta.showOpenDialog(null)
-                            if (elegirCarpeta.selectedFile != null) {
-                                estado.rutaGuardado = elegirCarpeta.selectedFile.toString()
-                            }
-                        }
+                        onClick = { mostrarExplorador = true }
                     ) {
                         Text("Elegir carpeta")
                     }
