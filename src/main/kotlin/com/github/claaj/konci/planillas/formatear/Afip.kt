@@ -14,6 +14,7 @@ internal fun tablaAfip(ruta: Path): DataFrame<*> {
                 "Importe Ret./Perc."
             )
         }
+        .dropNulls()
         .rename("CUIT Agente Ret./Perc.").into("CUIT")
         .rename("Denominación o Razón Social").into("RAZON_SOC")
         .rename("Importe Ret./Perc.").into("IMPORTE")
