@@ -17,7 +17,7 @@ import java.nio.file.Path
 
 
 @Composable
-fun TabLista(estado: TabEstadoLista) {
+fun TabLista(archivos: MutableList<Path>, extensionesPermitidas: List<String>) {
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -25,15 +25,16 @@ fun TabLista(estado: TabEstadoLista) {
         contentPadding = PaddingValues(16.dp)
     ) {
         item {
-            ZonaArrastrarSoltar { ruta ->
-                estado.items.add(ruta)
-            }
+            ZonaArrastrarSoltar(
+                agregarRuta = { ruta -> archivos.add(ruta) },
+                extensionesPermitidas = extensionesPermitidas
+            )
         }
 
-        items(estado.items.toList()) { ruta ->
+        items(archivos) { ruta ->
             ElementoLista(ruta) {
-                if (estado.items.contains(it)) {
-                    estado.items.remove(it)
+                if (archivos.contains(it)) {
+                    archivos.remove(it)
                 }
 
             }

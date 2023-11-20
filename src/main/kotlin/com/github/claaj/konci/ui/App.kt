@@ -13,19 +13,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.claaj.konci.ui.acercade.DialogoAcercaDe
-import com.github.claaj.konci.ui.conciliar.PaginaConciliar
-import com.github.claaj.konci.ui.conciliar.PaginaConciliarEstado
+import com.github.claaj.konci.ui.conciliar.Regimen
+import com.github.claaj.konci.ui.conciliar.SeccionConciliar
+import com.github.claaj.konci.ui.conciliar.SeccionConciliarEstado
 
 
 @Composable
 @Preview
-fun app() {
+fun app(version: String) {
     val opcionesMenu = OpcionesMenuPpal.entries
     var itemSeleccionado by remember { mutableStateOf(0) }
     var itemAux by remember { mutableStateOf(0) }
     var dialogoAcercaDe by remember { mutableStateOf(false) }
-    val estadoPercepciones by remember { mutableStateOf(PaginaConciliarEstado("Percepciones")) }
-    val estadoRetenciones by remember { mutableStateOf(PaginaConciliarEstado("Retenciones")) }
+    val estadoPercepciones by remember { mutableStateOf(SeccionConciliarEstado(Regimen.Percepciones)) }
+    val estadoRetenciones by remember { mutableStateOf(SeccionConciliarEstado(Regimen.Retenciones)) }
 
 
     Row {
@@ -51,12 +52,12 @@ fun app() {
             when (opcionesMenu[itemSeleccionado]) {
                 OpcionesMenuPpal.PERCEPCIONES -> {
                     itemAux = itemSeleccionado
-                    PaginaConciliar(estadoPercepciones)
+                    SeccionConciliar(estadoPercepciones)
                 }
 
                 OpcionesMenuPpal.RETENCIONES -> {
                     itemAux = itemSeleccionado
-                    PaginaConciliar(estadoRetenciones)
+                    SeccionConciliar(estadoRetenciones)
                 }
 
                 OpcionesMenuPpal.ACERCADE -> {
@@ -71,7 +72,7 @@ fun app() {
                         dialogoAcercaDe = false
                     },
                     logo = { LogoApp(40.dp) },
-                    version = "0.0.1-BETA"
+                    version = version
                 )
             }
         }

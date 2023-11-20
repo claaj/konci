@@ -1,4 +1,4 @@
-package com.github.claaj.konci.ui.conciliar.tabs.procesar
+package com.github.claaj.konci.ui.conciliar.tabs
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

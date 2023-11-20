@@ -13,7 +13,7 @@ fun main() = application {
         icon = painterResource("icon.svg"),
     ) {
         AppTheme {
-            app()
+            app("0.0.1-BETA")
         }
     }
 }

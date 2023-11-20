@@ -2,8 +2,8 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 
 plugins {
-    kotlin("jvm") version "1.9.10"
-    id("org.jetbrains.compose") version "1.5.3"
+    kotlin("jvm") version "1.9.20"
+    id("org.jetbrains.compose") version "1.5.10"
     id("org.jetbrains.kotlinx.dataframe") version "0.12.0"
 }
 
@@ -21,14 +21,15 @@ dependencies {
     // compose.desktop.currentOs should be used in launcher-sourceSet
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
-    implementation(compose.desktop.currentOs)
+    implementation(compose.desktop.currentOs) {
+        exclude(group = "org.jetbrains.compose.material")
+    }
     implementation(compose.material3)
     implementation(compose.materialIconsExtended)
     implementation("org.jetbrains.kotlinx:dataframe:0.12.0")
     implementation("org.jetbrains.kotlinx:dataframe-excel:0.12.0")
     implementation("org.apache.logging.log4j:log4j-api:2.20.0")
     implementation("org.apache.logging.log4j:log4j-core:2.20.0")
-    implementation("com.darkrockstudios:mpfilepicker:2.1.0")
     testImplementation(kotlin("test"))
 }
 
@@ -75,22 +76,4 @@ compose.desktop {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
-}
-
-val mainClass = "com.github.claaj.konci.ui.MainKt"
-
-tasks {
-    register("Jar", Jar::class.java) {
-        //archiveClassifier.set("all")
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        manifest {
-            attributes("Main-Class" to mainClass)
-        }
-        from(configurations.runtimeClasspath.get()
-            .onEach { println("add from dependencies: ${it.name}") }
-            .map { if (it.isDirectory) it else zipTree(it) })
-        val sourcesMain = sourceSets.main.get()
-        sourcesMain.allSource.forEach { println("add from sources: ${it.name}") }
-        from(sourcesMain.output)
-    }
 }

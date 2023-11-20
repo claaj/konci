@@ -1,6 +1,6 @@
 package com.github.claaj.konci.ui.conciliar.tabs.procesar.errores
 
-open class RutaGuardadoException(descripcion: String) : Exception("Error con la carpeta de guardado $descripcion")
+open class RutaGuardadoException(descripcion: String) : Exception("Error con la carpeta de guardado. $descripcion")
 
 class RutaGuardadoNoEscrituraException(ruta: String) :
     RutaGuardadoException("($ruta). El sistema no permite escribir en la misma.")
