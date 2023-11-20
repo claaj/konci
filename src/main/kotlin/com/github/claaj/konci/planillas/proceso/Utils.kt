@@ -102,3 +102,37 @@ fun sumarImportes(listaImportes: List<Double>): Double {
 fun filtroCuitImporte(df: DataFrame<*>, cuit: String, importe: Double): DataFrame<*> {
     return df.filter { "CUIT"<String>() == cuit && "IMPORTE"<Double>() == importe }
 }
+
+fun localDateAStringAnioMes(fecha: LocalDate): String {
+    return "${fecha.year}-${String.format("%02d", fecha.monthNumber)}"
+}
+
+fun convertirNumeroAProvincia(numero: Int): String {
+    return when (numero) {
+        901 -> "CABA"
+        902 -> "Buenos Aires"
+        903 -> "Catamarca"
+        904 -> "Cordoba"
+        905 -> "Corrientes"
+        906 -> "Chaco"
+        907 -> "Chubut"
+        908 -> "Entre Rios"
+        909 -> "Formosa"
+        910 -> "Jujuy"
+        911 -> "La Pampa"
+        912 -> "La Rioja"
+        913 -> "Mendoza"
+        914 -> "Misiones"
+        915 -> "Neuquen"
+        916 -> "Rio Negro"
+        917 -> "Salta"
+        918 -> "San Juan"
+        919 -> "San Luis"
+        920 -> "Santa Cruz"
+        921 -> "Santa Fe"
+        922 -> "Santiago del Estero"
+        923 -> "Tierra del Fuego"
+        924 -> "Tucuman"
+        else -> "Codigo Invalido"
+    }
+}

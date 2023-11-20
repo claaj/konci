@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.sp
 import com.github.claaj.konci.ui.conciliar.tabs.TabsConciliar
 
 @Composable
-fun PaginaConciliar(estado: PaginaConciliarEstado) {
+fun SeccionConciliar(estado: SeccionConciliarEstado) {
     Row {
         Divider(
             modifier = Modifier.fillMaxHeight().width(1.dp),
@@ -26,9 +26,9 @@ fun PaginaConciliar(estado: PaginaConciliarEstado) {
                     modifier = Modifier.width(200.dp).clip(RoundedCornerShape(topEnd = 16.dp)),
                     drawerContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
                 ) {
-                    Impuestos.entries.forEachIndexed { index, operacion ->
+                    estado.impuestos.forEachIndexed { index, impuesto ->
                         NavigationDrawerItem(
-                            label = { Text(text = operacion.titulo, fontSize = 14.sp) },
+                            label = { Text(text = impuesto.nombre, fontSize = 14.sp) },
                             selected = index == estado.indexActual,
                             onClick = {
                                 estado.indexActual = index
@@ -46,7 +46,7 @@ fun PaginaConciliar(estado: PaginaConciliarEstado) {
             }
         ) {
             Surface {
-                TabsConciliar(estado.procesos[estado.indexActual], estado.titulo)
+                TabsConciliar(estado.impuestosConciliar[estado.indexActual])
             }
         }
     }

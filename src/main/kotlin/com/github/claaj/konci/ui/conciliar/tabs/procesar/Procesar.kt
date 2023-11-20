@@ -1,8 +1,13 @@
 package com.github.claaj.konci.ui.conciliar.tabs.procesar
 
 import com.github.claaj.konci.planillas.errores.ProcesoException
+import com.github.claaj.konci.planillas.formatear.*
 import com.github.claaj.konci.planillas.proceso.conciliar
 import com.github.claaj.konci.planillas.proceso.fechaMayorTabla
+import com.github.claaj.konci.planillas.proceso.localDateAStringAnioMes
+import com.github.claaj.konci.ui.conciliar.Impuesto
+import com.github.claaj.konci.ui.conciliar.Regimen
+import com.github.claaj.konci.ui.conciliar.tabs.Dialogo
 import com.github.claaj.konci.ui.conciliar.tabs.procesar.errores.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,24 +24,32 @@ internal fun conciliarActuales(
     rutaCarpeta: String?,
     nombreCarpeta: String,
     nombreArchivo: String,
+    regimen: Regimen,
+    impuesto: Impuesto,
     archivosExternos: List<Path>,
     archivosLocales: List<Path>,
-    formatearExternos: (List<Path>) -> DataFrame<*>,
-    formatearLocales: (List<Path>) -> DataFrame<*>,
     origenExterno: String,
     origenLocal: String,
     dialogo: (String, Dialogo) -> Unit,
     abrirDialogoProcesando: () -> Unit,
-    cerrarDialogoProcesando: () -> Unit
+    cerrarDialogoProcesando: () -> Unit,
 ) {
     var tipoDialogo = Dialogo.Exito
     var descripcionDialogo = "Se procesaron correctamente todas las planillas."
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            checkEstadosParaConciliar(archivosExternos, archivosLocales, rutaCarpeta, origenExterno, origenLocal)
+            val (formatearExternos, formatearLocales) = funcionesFormatear(regimen, impuesto)
+            checkEstadosParaConciliar(
+                archivosExternos,
+                archivosLocales,
+                rutaCarpeta,
+                origenExterno,
+                origenLocal
+            )
             abrirDialogoProcesando()
-            val dfFiltrado = conciliar(archivosExternos, archivosLocales, formatearExternos, formatearLocales)
+            val dfFiltrado =
+                conciliar(archivosExternos, archivosLocales, formatearExternos, formatearLocales, impuesto)
             guardadoProcesado(rutaCarpeta as String, nombreCarpeta, nombreArchivo, dfFiltrado)
         } catch (listaExcep: ListaException) {
             tipoDialogo = Dialogo.Aviso
@@ -56,7 +69,7 @@ internal fun conciliarActuales(
 
 internal fun guardadoProcesado(rutaCarpeta: String, nombreCarpeta: String, nombreArchivo: String, df: DataFrame<*>) {
     val fecha = fechaMayorTabla(df)
-    val fechaString = "${fecha.year}-${String.format("%02d", fecha.monthNumber)}"
+    val fechaString = localDateAStringAnioMes(fecha)
     val rutaGuardado = Path(rutaCarpeta, nombreCarpeta, fechaString)
     Files.createDirectories(rutaGuardado)
     val rutaGuardadoArchivo = File(rutaGuardado.toString(), "$fechaString-$nombreArchivo.xlsx")
@@ -82,5 +95,32 @@ internal fun checkEstadosParaConciliar(
 
     for (rutalocal in listaLocal) {
         if (!rutalocal.exists()) throw ListaArchivoNoExiste(origenLocal, rutalocal.toString())
+    }
+}
+
+internal fun funcionesFormatear(
+    regimen: Regimen,
+    impuesto: Impuesto
+): Pair<(List<Path>) -> DataFrame<*>, (List<Path>) -> DataFrame<*>> {
+    return when (regimen) {
+        Regimen.Percepciones -> {
+            when (impuesto) {
+                Impuesto.GANANCIAS -> Pair(::tablasAfip, ::tablasTangoPercepciones)
+                Impuesto.IIBB -> Pair(::tablasConvenioMultiPercep, ::tablasTangoIIBBPercep)
+                Impuesto.IVA -> Pair(::tablasAfip, ::tablasTangoPercepciones)
+                Impuesto.SUSS -> Pair(::tablasSuss, ::tablasTangoPercepciones)
+            }
+        }
+
+        Regimen.Retenciones -> {
+            when (impuesto) {
+                Impuesto.GANANCIAS -> Pair(::tablasAfip, ::tablasTangoRetenciones)
+                Impuesto.IIBB -> Pair(::tablasConvenioMultiReten, ::tablasTangoIIBBRet)
+                Impuesto.IVA -> Pair(::tablasAfip, ::tablasTangoRetenciones)
+                Impuesto.SUSS -> Pair(::tablasSuss, ::tablasTangoRetenciones)
+            }
+        }
+
+        Regimen.Ambos -> throw UnsupportedOperationException()
     }
 }

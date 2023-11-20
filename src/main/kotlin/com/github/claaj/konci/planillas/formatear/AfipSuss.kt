@@ -7,10 +7,10 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.readExcel
 import java.nio.file.Path
 
-internal fun tablaAfip(ruta: Path): DataFrame<*> {
+internal fun tablaSuss(ruta: Path): DataFrame<*> {
     return DataFrame.readExcel(ruta.toString())
         .select {
-            col("CUIT Agente Ret./Perc.") and col("Denominación o Razón Social") and col("Número Comprobante") and col("Fecha Comprobante") and col(
+            col("CUIT Agente Ret./Perc.") and col("Denominación o Razón Social") and col("Número Certificado") and col("Fecha Ret./Perc.") and col(
                 "Importe Ret./Perc."
             )
         }
@@ -18,16 +18,16 @@ internal fun tablaAfip(ruta: Path): DataFrame<*> {
         .rename("CUIT Agente Ret./Perc.").into("CUIT")
         .rename("Denominación o Razón Social").into("RAZON_SOC")
         .rename("Importe Ret./Perc.").into("IMPORTE")
-        .rename("Número Comprobante").into("N_COMP")
-        .rename("Fecha Comprobante").into("FECHA")
+        .rename("Número Certificado").into("N_COMP")
+        .rename("Fecha Ret./Perc.").into("FECHA")
         .add("ORIGEN") { "AFIP" }
         .convert("IMPORTE").toDouble()
         .convert("CUIT").with { cuitAfipCastAString(it) }
         .convert { "FECHA"<String>() }.with { stringToLocalDate(it) }
 }
 
-fun tablasAfip(rutas: List<Path>): DataFrame<*> {
+fun tablasSuss(rutas: List<Path>): DataFrame<*> {
     return rutasADataframe(rutas) {
-        tablaAfip(it)
+        tablaSuss(it)
     }
 }

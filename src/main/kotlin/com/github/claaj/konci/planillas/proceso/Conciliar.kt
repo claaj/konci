@@ -1,5 +1,6 @@
 package com.github.claaj.konci.planillas.proceso
 
+import com.github.claaj.konci.ui.conciliar.Impuesto
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.count
@@ -8,17 +9,17 @@ import org.jetbrains.kotlinx.dataframe.api.head
 import java.nio.file.Path
 import kotlin.math.absoluteValue
 
-val COLUMNAS = listOf("CUIT", "RAZON_SOC", "N_COMP", "FECHA", "IMPORTE")
-
 fun conciliar(
     archivosExternos: List<Path>,
     archivosLocales: List<Path>,
     formatearExternos: (List<Path>) -> DataFrame<*>,
-    formatearLocales: (List<Path>) -> DataFrame<*>
+    formatearLocales: (List<Path>) -> DataFrame<*>,
+    impuesto: Impuesto
 ): DataFrame<*> {
     val dfExterno = formatearExternos(archivosExternos)
     val dfLocal = formatearLocales(archivosLocales)
-    var dfFiltrado = dataFrameOf(COLUMNAS, listOf())
+    val columnas = obtenerFormatoTabla(impuesto)
+    var dfFiltrado = dataFrameOf(columnas, listOf())
 
     val cuitsUnicos = cuitsUnicos(dfExterno, dfLocal)
 
@@ -39,4 +40,11 @@ fun conciliar(
         }
     }
     return dfFiltrado
+}
+
+internal fun obtenerFormatoTabla(impuesto: Impuesto): List<String> {
+    return when (impuesto) {
+        Impuesto.SUSS -> listOf("CUIT", "N_COMP", "FECHA", "IMPORTE", "ORIGEN")
+        else -> listOf("CUIT", "RAZON_SOC", "N_COMP", "FECHA", "IMPORTE", "ORIGEN")
+    }
 }
