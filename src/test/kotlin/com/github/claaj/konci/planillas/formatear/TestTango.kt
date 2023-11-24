@@ -1,25 +1,30 @@
 package com.github.claaj.konci.planillas.formatear
 
-import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.jupiter.api.Test
 import kotlin.io.path.Path
-import kotlin.test.assertEquals
 
-class TestTango {
+class TestTango : TestFormatear {
     @Test
-    fun testSetupTango() {
-        val numerosFilasEsperado = 4
-        val numerosFiltroEsperado = 1
-        val archivosPrueba = listOf(Path("src/test/resources/Prueba-Tango-1.xlsx"))
-        val df = tablasTango(archivosPrueba)
-        df.print()
-        assertEquals(numerosFilasEsperado, df.count(), "El número de filas no coincide.")
-        assertEquals(
-            numerosFiltroEsperado,
-            df.filter { "CUIT"<String>() == "30901299992" }.count(),
-            "El número de filas del filtrado no coincide."
+    fun testTangoPercepciones() {
+        testFormatear(
+            cuit1 = "30445556667",
+            cuit2 = "30112226664",
+            funcionFormatear = ::tablasTangoPercepciones,
+            archivos = listOf(Path("src/test/resources/Percepciones/IVA/Tango.xlsx")),
+            filasEsperadasCuit1 = 1,
+            filasEsperadasCuit2 = 1
+        )
+    }
+
+    @Test
+    fun testTangoRetenciones() {
+        testFormatear(
+            cuit1 = "30887776665",
+            cuit2 = "30112223334",
+            funcionFormatear = ::tablasTangoRetenciones,
+            archivos = listOf(Path("src/test/resources/Retenciones/Ganancias-IVA/Tango.xlsx")),
+            filasEsperadasCuit1 = 1,
+            filasEsperadasCuit2 = 1
         )
     }
 }

@@ -1,24 +1,33 @@
 package com.github.claaj.konci.planillas.formatear
 
-import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.filter
 import org.junit.jupiter.api.Test
 import kotlin.io.path.Path
-import kotlin.test.assertEquals
 
-class TestAfip {
+class TestAfip : TestFormatear {
+
     @Test
-    fun testSetupAfip() {
-        val numerosFilasEsperado = 9
-        val numerosFiltroEsperado = 2
-        val archivosPrueba = listOf(Path("src/test/resources/Prueba-AFIP-1.xlsx"))
-        val df = tablasAfip(archivosPrueba)
-        assertEquals(numerosFilasEsperado, df.count(), "El número de filas no coincide.")
-        assertEquals(
-            numerosFiltroEsperado,
-            df.filter { "CUIT"<String>() == "30901299992" }.count(),
-            "El número de filas del filtrado no coincide."
+    fun testAfipPercepciones() {
+        testFormatear(
+            cuit1 = "30445556667",
+            cuit2 = "30112226664",
+            funcionFormatear = ::tablasAfip,
+            archivos = listOf(Path("src/test/resources/Percepciones/IVA/AFIP.xls")),
+            filasEsperadasCuit1 = 2,
+            filasEsperadasCuit2 = 2
+        )
+    }
+
+    @Test
+    fun testAfipRetenciones() {
+        testFormatear(
+            cuit1 = "30887776665",
+            cuit2 = "30112223334",
+            funcionFormatear = ::tablasAfip,
+            archivos = listOf(Path("src/test/resources/Retenciones/Ganancias-IVA/AFIP.xls")),
+            filasEsperadasCuit1 = 2,
+            filasEsperadasCuit2 = 2
         )
     }
 }
+
 
