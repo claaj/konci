@@ -44,7 +44,7 @@ fun conciliar(
 
 internal fun obtenerFormatoTabla(impuesto: Impuesto): List<String> {
     return when (impuesto) {
-        Impuesto.SUSS -> listOf("CUIT", "N_COMP", "FECHA", "IMPORTE", "ORIGEN")
+        Impuesto.IIBB -> listOf("CUIT", "N_COMP", "FECHA", "IMPORTE", "PROVINCIA", "ORIGEN")
         else -> listOf("CUIT", "RAZON_SOC", "N_COMP", "FECHA", "IMPORTE", "ORIGEN")
     }
 }
