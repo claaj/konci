@@ -1,15 +1,21 @@
 [versions]
-compose = "1.6.0"
-compose-plugin = "1.6.0-alpha01"
-junit = "4.13.2"
+compose-plugin = "1.6.0"
 kotlin = "1.9.21"
+log4jCore = "2.23.0"
+log4jApi = "2.23.0"
+mpfilepicker = "3.1.0"
+precomposeViewmodel = "1.5.11"
+precompose = "1.5.11"
+dataframe = "0.12.0"
 
 [libraries]
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4jCore" }
+log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4jApi" }
+mpfilepicker = { module = "com.darkrockstudios:mpfilepicker", version.ref = "mpfilepicker" }
+precompose-viewmodel = { module = "moe.tlaster:precompose-viewmodel", version.ref = "precomposeViewmodel" }
+precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
+dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "dataframe" }
+dataframe-excel = { module = "org.jetbrains.kotlinx:dataframe-excel", version.ref = "dataframe" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
