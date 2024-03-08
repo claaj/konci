@@ -1,9 +1,8 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform) version "1.9.20"
-    alias(libs.plugins.jetbrainsCompose) version "1.5.10"
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.jetbrainsCompose)
 }
 
 repositories {
@@ -24,21 +23,23 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
-            @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             implementation(compose.desktop.currentOs) {
                 exclude(group = "org.jetbrains.compose.material")
             }
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
-            implementation("org.jetbrains.kotlinx:dataframe:0.12.0")
-            implementation("org.jetbrains.kotlinx:dataframe-excel:0.12.0")
-            implementation("com.darkrockstudios:mpfilepicker:3.1.0")
+            implementation(libs.dataframe)
+            implementation(libs.dataframe.excel)
+            implementation(libs.mpfilepicker)
+            implementation(libs.log4j.api)
+            implementation(libs.log4j.core)
+
             // PreCompose
             api(compose.foundation)
             api(compose.animation)
-            api("moe.tlaster:precompose:1.5.10")
-            api("moe.tlaster:precompose-viewmodel:1.5.10")
+            api(libs.precompose)
+            api(libs.precompose.viewmodel)
         }
 
         desktopMain.dependencies {
@@ -53,7 +54,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "com.github.claaj.konci.MainKt"
 
         buildTypes.release.proguard.configurationFiles.from(project.file("proguard-rules.pro"))
 
@@ -76,6 +77,7 @@ compose.desktop {
             windows {
                 console = false
                 iconFile.set(project.file("../resources/icon.ico"))
+                shortcut = true
             }
         }
     }
@@ -86,8 +88,4 @@ configurations.all {
         // https://github.com/JetBrains/compose-jb/issues/1404#issuecomment-1146894731
         attribute(Attribute.of("ui", String::class.java), "awt")
     }
-}
-
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
 }
