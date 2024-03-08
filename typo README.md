@@ -20,16 +20,16 @@ Y **retenciones** de:
 
 ![Captura desde 2024-03-07 23-07-51](https://github.com/claaj/konci/assets/102485147/201827b2-d55d-4d3c-99c9-93d39afde1a1)
 
-Para las planilllas de IIBB es necesario utilizar los archivos de texto de [Convenio Multilateral](https://www.ca.gob.ar/convenio-multilateral).
-
 ## ¿Cómo se utiliza el programa?
 1. Una vez abierto el mismo, en la barra ubicada sobre el margen izquierdo seleccionar el regimen a conciliar.
 2. Al hacer click sobre el regimen aperecerá otra barra con los impuestos disponibles para conciliar.
 3. Seleccione el impuesto que desea conciliar, haciendo click encima del mismo.
 4. En la pantalla principal habrá una barra con dos solapas. Una para los archivos "externos" (AFIP y Conv. Multilateral) y otra para los "locales" (Tango).
-5. Cargué los archivos necesarios para procesar. Arrastre el/los archivo/s en la zona indicada en la pantalla. Cargue los archivos externos y locales.
-6. Una vez realizado lo anterior, puede pulsar el boton del margen inferior derecho que dice "Procesar" para conciliar los archivos.
-7. Se abrirá un explorador que le permitirá elegir la carpeta de guardado del archivo procesado.
+5. Cargue los archivos necesarios para procesar. Arrastre el/los archivo/s en la zona indicada en la pantalla. Asegurese de cargar los archivos externos y locales.
+7. Una vez realizado lo anterior, puede pulsar el boton del margen inferior derecho que dice "Procesar" para conciliar los archivos.
+8. Se abrirá un explorador que le permitirá elegir la carpeta de guardado para la planilla resultante del proceso.
+
+Para las planilllas de IIBB es necesario utilizar los archivos de texto (`.txt`) de [Convenio Multilateral](https://www.ca.gob.ar/convenio-multilateral).
 
 ## ¿Qué tecnologías se utilizan?
 - El programa está desarrollado en Kotlin.
