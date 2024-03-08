@@ -14,6 +14,12 @@ Y **retenciones** de:
 - IVA
 - SUSS
 
+![Captura desde 2024-03-07 23-07-39](https://github.com/claaj/konci/assets/102485147/46f83fa3-c899-4915-b83c-96e9e7648e01)
+
+![Captura desde 2024-03-07 23-08-29](https://github.com/claaj/konci/assets/102485147/6b460ab5-1154-4e52-bf5f-94223c609a33)
+
+![Captura desde 2024-03-07 23-07-51](https://github.com/claaj/konci/assets/102485147/201827b2-d55d-4d3c-99c9-93d39afde1a1)
+
 Para las planilllas de IIBB es necesario utilizar los archivos de texto de [Convenio Multilateral](https://www.ca.gob.ar/convenio-multilateral).
 
 ## ¿Cómo se utiliza el programa?
