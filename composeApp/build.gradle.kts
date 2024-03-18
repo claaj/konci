@@ -21,12 +21,8 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
-            implementation(compose.desktop.currentOs) {
-                exclude(group = "org.jetbrains.compose.material")
-            }
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(libs.dataframe)
@@ -43,7 +39,9 @@ kotlin {
         }
 
         desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
+            implementation(compose.desktop.currentOs) {
+                exclude(group = "org.jetbrains.compose.material")
+            }
         }
 
         commonTest.dependencies {
